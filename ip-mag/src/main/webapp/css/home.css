@@ -1,0 +1,21 @@
+table#tb {
+	border-spacing:4px 8px;	
+}
+
+tr#frame {
+	font:25px bold "HG‘n‰pŠpÎß¯Ìß‘Ì";
+	background-color:#E6E6FA;
+}
+
+tr#data {
+	font:25px;
+	background-color:#F0FFF0;	
+}
+
+.fieldError {
+	background-color:pink;
+}
+
+#errors {
+	color:red;	
+}
