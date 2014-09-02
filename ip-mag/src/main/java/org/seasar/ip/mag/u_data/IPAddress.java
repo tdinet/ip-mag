@@ -6,7 +6,9 @@ import java.util.*;
 
 // 接続可能なIPアドレス情報の保存クラス
 public class IPAddress implements Serializable {
+	private static String TIMEOUT = "1000";
 	private String host; // ホスト
+	private String osname; // OS
 	private HashMap<String, Boolean> ips; // 接続状態を保存
 	
 	// IPデータの範囲を表示するときに使用するクラス
@@ -61,6 +63,7 @@ public class IPAddress implements Serializable {
 	
 	public IPAddress(String url) {
 		this.ips = new HashMap<String, Boolean>();
+		this.osname = System.getProperty("os.name");
 		
 		// ホストアドレスの取得
 		try {
@@ -124,14 +127,31 @@ public class IPAddress implements Serializable {
 	// 接続状態のテスト
 	private boolean Test(String ip) {
 		boolean result = false;
+		String[] command = new String[6];
 		
+		if(this.osname.startsWith("Windows")) {
+			// OSがWindows
+			command[0] = "ping";
+			command[1] = "-n";
+			command[2] = "1";
+			command[3] = "-w";
+			command[4] = TIMEOUT;
+			command[5] = ip;
+		} else if(this.osname.startsWith("Linux")) {
+			// OSがLinux
+			command[0] = "ping";
+			command[1] = "-c";
+			command[2] = "1";
+			command[3] = "-t";
+			command[4] = TIMEOUT;
+			command[5] = ip;
+		}
 		
-		/*try {
-			InetAddress ia = InetAddress.getByName(ip);
-			result = ia.isReachable(1000);
-		} catch(UnknownHostException e) {			
+		try {
+			result = new ProcessBuilder(command).start().waitFor() == 0;
 		} catch(IOException e) {			
-		}*/		
+		} catch(InterruptedException e) {			
+		}
 		
 		return result;
 	}
