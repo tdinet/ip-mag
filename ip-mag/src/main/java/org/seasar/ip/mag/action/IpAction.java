@@ -2,7 +2,10 @@ package org.seasar.ip.mag.action;
 
 import java.io.*;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContext;
+
 import org.seasar.cubby.action.Action;
 import org.seasar.cubby.action.ActionResult;
 import org.seasar.cubby.action.Forward;
@@ -20,21 +23,34 @@ public class IpAction extends Action {
     public @RequestParameter String machine;
     public @RequestParameter String position;
     public @RequestParameter String etc;
-	public String ip = "192.tes.tes";
+	public String ip = "";
+	public HttpServletRequest request;
 	public ServletContext application;
 	public Map<String, Object> sessionScope;
 
 	// 登録画面へ遷移
 	public ActionResult index() {
+		String ipdata = "";
+		ipdata = (String)sessionScope.get("NOWIP");
+		this.ip = ipdata; 
         return new Forward("register.jsp");
 	}
 	
 	// 確認画面へ遷移
 	@Validation(rules = "validationRules", errorPage = "register.jsp")
-	public ActionResult register() {
+	public ActionResult register() {		
+		String ipdata = "";
+		ipdata = (String)sessionScope.get("NOWIP");
+		this.ip = ipdata; 
+        
 		sessionScope.put(
 				"Data",
-				new UserData(ip, name, machine, position, etc));
+				new UserData(
+						ip,
+						name,
+						machine,
+						position,
+						etc));
 		this.err = "";
 		return new Forward("confirm.jsp");
 	}

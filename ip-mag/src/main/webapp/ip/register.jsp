@@ -6,8 +6,8 @@
 <title>利用者情報</title>
 </head>
 <body>
-	<h3>IPアドレス 192.tes.tes</h3>
-	<t:form action="register" value="${action}">
+	<h3>IPアドレス ${f:out(action.ip)}</h3>
+	<t:form action="ip/register" value="${action}">
 	<table border="1">
 		<tr>
 			<td align="right">利用者名:</td>
@@ -35,6 +35,6 @@
 		</tr>				
 	</table>	
 	</t:form>
-	<span style="color:red">${action.err}</span>	
+	<span style="color:red">${f:out(action.err)}</span>
 </body>
 </html>

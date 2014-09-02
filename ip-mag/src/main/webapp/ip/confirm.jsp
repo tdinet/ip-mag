@@ -10,7 +10,7 @@
 	<table border="0">
 		<tr>
 			<td align="right"><b>IPアドレス:</b></td>
-			<td>192.tes.tes</td>
+			<td>${f:out(action.ip)}</td>
 		</tr>
 		<tr>
 			<td align="right"><b>利用者名:</b></td>

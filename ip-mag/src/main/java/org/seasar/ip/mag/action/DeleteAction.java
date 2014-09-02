@@ -14,7 +14,7 @@ public class DeleteAction extends Action {
 	public ActionResult index() {
 		Integer deleteID;
 		
-		String delete = (String)sessionScope.get("DeleteIP");
+		String delete = (String)sessionScope.get("NOWIP");
 		UserDataManager udm = (UserDataManager)sessionScope.get("UD");
 		deleteID = new Integer(udm.GetUserID(delete));
 		

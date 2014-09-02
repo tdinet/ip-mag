@@ -21,9 +21,10 @@ public class UserDataManager implements Serializable {
 		}
 	};
 	private ArrayList<DataSet> ds = new ArrayList<DataSet>();
+	private IPAddress ipa;
 	
 	public UserDataManager(String u) {		
-		// ここでファイルからユーザーデータ情報を読み込んで、DataSetに初期化
+		/* ここでファイルからユーザーデータ情報を読み込んで、DataSetに初期化 */
 		this.url = u;
 		ds.clear();		
 		try {
@@ -31,6 +32,8 @@ public class UserDataManager implements Serializable {
 					new FileReader(this.url));
 			String line;
 			
+			// 最初の1行はIPアドレスの範囲情報
+			br.readLine();
 			while((line = br.readLine()) != null) {
 				// ユーザー情報をスペースで分割してそれぞれのデータを取り出す。
 				String[] str = line.split(" ");
@@ -46,6 +49,10 @@ public class UserDataManager implements Serializable {
 			br.close();
 		} catch(IOException e) {			
 		}
+		/* ここまで */
+		
+		// IPAdressクラスの初期化
+		this.ipa = new IPAddress(u);
 	}
 	
 	// ユーザー情報をArrayListにプッシュ
@@ -71,61 +78,91 @@ public class UserDataManager implements Serializable {
 	// IP接続状況の表示用メソッド
 	public String IPManage() {
 		StringBuilder block = new StringBuilder();
+		IPAddress ipad = this.ipa;
 		
-		for(int i = 0; i < ds.size(); i++) {
-			DataSet temp = ds.get(i);
-					
+		ipad.Start();
+		while(!ipad.IsEnding()) {
+			String nowip = ipad.GetIP();
+			boolean connect = ipad.IsConnection(nowip);
+			
 			block.append("<tr id=" + "'data'" + ">");
 			
 			// 接続状況
 			block.append("<td" + " align='center'" + ">");
-			if(temp.net) {
+			if(connect) {
 				block.append("○");
 			} else {
 				block.append("×");
 			}
 			block.append("</td>");
 			
-			// IPアドレス
-			block.append("<td>");
-			block.append(temp.ip);
-			block.append("</td>");
-			
-			// 名前
-			block.append("<td>");
-			block.append(temp.name);
-			block.append("</td>");
-			
-			// マシン名
-			block.append("<td>");
-			block.append(temp.machine);
-			block.append("</td>");
-			
-			// 位置
-			block.append("<td>");
-			block.append(temp.position);
-			block.append("</td>");
-			
-			// 備考
-			block.append("<td>");
-			block.append(temp.etc);
-			block.append("</td>");
-			
-			block.append("</tr>");
+			if(this.IsUserID(nowip)) {
+				// ユーザー情報が登録されている場合
+				int id = this.GetUserID(nowip);
+				DataSet dss = ds.get(id);
+				// IPアドレス
+				block.append("<td>" + 
+						"<a href='movedelete?ipaddr=" + nowip + "'>" +
+								nowip + "</a>");
+				block.append("</td>");
+				
+				// 名前
+				block.append("<td>");
+				block.append(dss.name);
+				block.append("</td>");
+				
+				// マシン名
+				block.append("<td>");
+				block.append(dss.machine);
+				block.append("</td>");
+				
+				// 位置
+				block.append("<td>");
+				block.append(dss.position);
+				block.append("</td>");
+				
+				// 備考
+				block.append("<td>");
+				block.append(dss.etc);
+				block.append("</td>");
+				
+				block.append("</tr>");				
+			} else {
+				// ユーザー情報が登録されていない場合
+				// IPアドレス
+				block.append("<td>" + 
+						"<a href='moveip?ipaddr=" + nowip + "'>" +
+								nowip + "</a>");
+				block.append("</td>");
+				
+				// 名前
+				block.append("<td>");
+				block.append("");
+				block.append("</td>");
+				
+				// マシン名
+				block.append("<td>");
+				block.append("");
+				block.append("</td>");
+				
+				// 位置
+				block.append("<td>");
+				block.append("");
+				block.append("</td>");
+				
+				// 備考
+				block.append("<td>");
+				block.append("");
+				block.append("</td>");
+				
+				block.append("</tr>");
+			}
+			ipa.Next();
 		}
 		
 		return block.toString();
 	}
-	
-	// 指定したIPアドレスの接続状況テスト
-	public String IPTest() {
-		IPAddress ipa = new IPAddress();
-		String host = ipa.GetHost().toString();
-		boolean result = ipa.Test(host);
 		
-		return host + " の接続テスト結果 " + result + "";
-	}
-	
 	// DataSetクラスのデータのゲッター
 	public String GetIP(int index) {
 		return ds.get(index).ip;
