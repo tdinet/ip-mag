@@ -32,7 +32,7 @@
 	
 	<p></p>
 	を登録解除します。
-	<t:form action="delete/complete" value="${action}">
+	<t:form action="complete" value="${action}">
 	<input type="submit" value="解除" />
 	</t:form>	
 </body>

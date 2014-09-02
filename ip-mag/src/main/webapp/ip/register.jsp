@@ -7,7 +7,7 @@
 </head>
 <body>
 	<h3>IPアドレス ${f:out(action.ip)}</h3>
-	<t:form action="ip/register" value="${action}">
+	<t:form action="register" value="${action}">
 	<table border="1">
 		<tr>
 			<td align="right">利用者名:</td>

@@ -34,7 +34,9 @@ public class UserDataManager implements Serializable {
 			
 			// 最初の1行はIPアドレスの範囲情報
 			br.readLine();
-			while((line = br.readLine()) != null) {
+			// 2行目は改行
+			br.readLine();
+			while((line = br.readLine()) != null) {				
 				// ユーザー情報をスペースで分割してそれぞれのデータを取り出す。
 				String[] str = line.split(" ");
 				
@@ -235,6 +237,9 @@ public class UserDataManager implements Serializable {
 			BufferedReader br = new BufferedReader(
 					new FileReader(dest));
 			
+			// 最初の1行(IPアドレス情報)
+			copyString = br.readLine();
+			als.add(copyString);
 			while((copyString = br.readLine()) != null) {
 				String[] splitString = copyString.split(" ");				
 				
