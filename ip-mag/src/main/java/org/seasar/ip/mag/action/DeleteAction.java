@@ -1,44 +1,47 @@
 package org.seasar.ip.mag.action;
 
 import java.util.Map;
+
 import org.seasar.cubby.action.Action;
 import org.seasar.cubby.action.ActionResult;
 import org.seasar.cubby.action.Forward;
 import org.seasar.cubby.action.Redirect;
-import org.seasar.ip.mag.u_data.UserDataManager;
+import org.seasar.cubby.action.RequestParameter;
+import org.seasar.ip.mag.u_data.IPAddressAssignmentManager;
 
 public class DeleteAction extends Action {
+	public @RequestParameter String ipaddr;
 	public String ip, name, machine, position, etc;
 	public Map<String, Object> sessionScope;
 
 	public ActionResult index() {
-		Integer deleteID;
+		int deleteID;
 		
-		String delete = (String)sessionScope.get("NOWIP");
-		UserDataManager udm = (UserDataManager)sessionScope.get("UD");
-		deleteID = new Integer(udm.GetUserID(delete));
+		String delete = ipaddr;
+		IPAddressAssignmentManager iaam = (IPAddressAssignmentManager)sessionScope.get("UD");
+		deleteID = new Integer(iaam.getUserID(delete));
 		
-		this.ip = udm.GetIP(deleteID);
-		this.name = udm.GetName(deleteID);
-		this.machine = udm.GetMachine(deleteID);
-		this.position = udm.GetPosition(deleteID);
-		this.etc = udm.GetETC(deleteID);
-		sessionScope.put("ID", deleteID);
+		this.ip = iaam.getIP(deleteID);
+		this.name = iaam.getName(deleteID);
+		this.machine = iaam.getMachine(deleteID);
+		this.position = iaam.getPosition(deleteID);
+		this.etc = iaam.getETC(deleteID);
+		sessionScope.put("DeleteIP", delete);
 		
 		return new Forward("delete.jsp");
 	}
 	
 	// 登録解除
 	public ActionResult complete() {
-		UserDataManager udm = (UserDataManager)sessionScope.get("UD");
+		IPAddressAssignmentManager iaam = (IPAddressAssignmentManager)sessionScope.get("UD");
 		
-		int id = (Integer)sessionScope.get("ID");
+		String d_ip = (String)sessionScope.get("DeleteIP");
 		// 指定したIPアドレスのユーザー情報がないならエラー画面へ
-		if(!(id < udm.GetSize()) || !udm.IsUserID(udm.GetIPString(id))) {
+		if(!iaam.isRegisteredID(d_ip)) {
 			return new Forward("/error/error2.jsp");
 		}
 		
-		udm.DeleteUserData((Integer)sessionScope.get("ID"));
+		iaam.deleteUserInfo(d_ip);
 		
 		// 後でリダイレクトに変更
 		return new Forward("complete.jsp");

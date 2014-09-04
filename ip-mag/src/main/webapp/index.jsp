@@ -9,10 +9,6 @@
 <title>IP利用状況</title>
 </head>
 <body>
-	<ul>
-		<li><a href="ip">利用者登録テスト</a></li>
-		<li><a href="delete">登録状況解除テスト</a></li>
-	</ul>
 	<table border="0" id="tb">
 		<tr id="frame">
 		<td>接続状況</td>
@@ -22,7 +18,7 @@
 		<td>位置</td>
 		<td>備考</td>
 		</tr>
-		${sessionScope.UD.IPManage()}
+		${sessionScope.UD.displayIPAddressAssignment()}
 	</table>
 </body>
 </html>

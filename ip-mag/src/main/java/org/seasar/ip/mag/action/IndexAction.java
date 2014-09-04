@@ -1,5 +1,6 @@
 package org.seasar.ip.mag.action;
 
+import java.io.File;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,7 @@ import org.seasar.cubby.action.Forward;
 import org.seasar.cubby.action.Redirect;
 import org.seasar.cubby.action.Path;
 import org.seasar.cubby.action.RequestParameter;
-import org.seasar.ip.mag.u_data.UserDataManager;
+import org.seasar.ip.mag.u_data.IPAddressAssignmentManager;
 
 @ActionClass
 @Path("/")
@@ -24,22 +25,10 @@ public class IndexAction {
 	public ActionResult index() {
 		sessionScope.put(
 				"UD",
-				new UserDataManager(application.getRealPath("/data/ipdat")));
+				new IPAddressAssignmentManager(
+						application.getRealPath("") +
+						File.separator + "data"
+						));
 		return new Forward("index.jsp");
-	}
-	
-	// 登録画面へ
-	public ActionResult moveip() {
-		String ipdata = ipaddr;
-		sessionScope.put("NOWIP", ipdata);
-		return new Redirect("/ip/");
-	}
-	
-	// 解除画面へ
-	public ActionResult movedelete() {
-		String ipdata = ipaddr;
-		sessionScope.put("NOWIP", ipdata);
-		
-		return new Redirect("/delete/");
 	}
 }

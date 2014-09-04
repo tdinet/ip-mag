@@ -15,7 +15,7 @@ import org.seasar.cubby.action.Validation;
 import org.seasar.cubby.validator.ValidationRules;
 import org.seasar.cubby.validator.validators.*;
 import org.seasar.cubby.validator.DefaultValidationRules;
-import org.seasar.ip.mag.u_data.UserDataManager;
+import org.seasar.ip.mag.u_data.IPAddressAssignmentManager;
 
 public class IpAction extends Action {
 	public @RequestParameter String err = "";
@@ -23,6 +23,8 @@ public class IpAction extends Action {
     public @RequestParameter String machine;
     public @RequestParameter String position;
     public @RequestParameter String etc;
+    public @RequestParameter String ipaddr;
+
 	public String ip = "";
 	public HttpServletRequest request;
 	public ServletContext application;
@@ -30,9 +32,8 @@ public class IpAction extends Action {
 
 	// 登録画面へ遷移
 	public ActionResult index() {
-		String ipdata = "";
-		ipdata = (String)sessionScope.get("NOWIP");
-		this.ip = ipdata; 
+		sessionScope.put("NOWIP", ipaddr);
+		this.ip = ipaddr; 
         return new Forward("register.jsp");
 	}
 	
@@ -59,13 +60,13 @@ public class IpAction extends Action {
 	public ActionResult registered() {
 		// ユーザーデータをファイルに保存
 		UserData ud = (UserData)sessionScope.get("Data");
-		UserDataManager udm = (UserDataManager)sessionScope.get("UD");
+		IPAddressAssignmentManager udm = (IPAddressAssignmentManager)sessionScope.get("UD");
 		
-		if(udm.IsUserID(ud.GetIP())) {
+		if(udm.isRegisteredID(ud.GetIP())) {
 			return new Forward("/error/error.jsp");
 		}
 		
-		udm.DataPush(
+		udm.pushAndWrite(
 				ud.GetIP(),
 				ud.GetName(),
 				ud.GetMachine(),
