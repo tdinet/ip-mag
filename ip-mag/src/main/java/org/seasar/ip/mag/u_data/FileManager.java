@@ -10,6 +10,7 @@ public class FileManager {
 	private int file_index; // 行番号
 	private File lock_file; // ロックファイル
 	private String lock_file_url; // ロックファイルのurl
+	public boolean file_status;
 	
 	public FileManager() {		
 	}
@@ -28,19 +29,26 @@ public class FileManager {
 		this.file_index = 0;
 		this.file_str_array = new ArrayList<String>();
 		
-		try {
-			BufferedReader br = new BufferedReader(
-				new FileReader(this.file_url));
-			String line;
-			
-			while((line = br.readLine()) != null) {
-				file_str_array.add(line);
+		if(this.createLockFile()) {
+			try {
+				BufferedReader br = new BufferedReader(
+					new FileReader(this.file_url));
+				String line;
+				
+				while((line = br.readLine()) != null) {
+					file_str_array.add(line);
+				}
+				br.close();
+				
+				this.deleteLockFile();
+				this.file_status = true;
+			} catch(FileNotFoundException e) {
+				e.printStackTrace();
+			} catch(IOException e) {
+				e.printStackTrace();
 			}
-			br.close();
-		} catch(FileNotFoundException e) {
-			e.printStackTrace();
-		} catch(IOException e) {
-			e.printStackTrace();
+		} else {
+			this.file_status = false;
 		}
 	}
 	
@@ -51,17 +59,21 @@ public class FileManager {
 		this.file_index = 0;
 		file_str_array = new ArrayList<String>();
 		
-		try {
-			BufferedReader br = new BufferedReader(
-					new FileReader(this.file_url));
-				String line;
-				
-				while((line = br.readLine()) != null) {
-					file_str_array.add(line);
-				}
-				br.close();
-		} catch(FileNotFoundException e) {			
-		} catch(IOException e) {			
+		if(this.createLockFile()) {
+			try {
+				BufferedReader br = new BufferedReader(
+						new FileReader(this.file_url));
+					String line;
+					
+					while((line = br.readLine()) != null) {
+						file_str_array.add(line);
+					}
+					br.close();
+					
+					this.deleteLockFile();
+			} catch(FileNotFoundException e) {			
+			} catch(IOException e) {			
+			}
 		}
 	}
 	

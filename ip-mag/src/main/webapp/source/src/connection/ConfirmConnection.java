@@ -14,9 +14,23 @@ public class ConfirmConnection {
 		// スレッド終了の判定ステータス
 		String status = "";
 		String path = System.getProperty("user.dir") + File.separator +
-					"data" + File.separator + "connection"; 
+					"data" + File.separator + "connection";
 		
-		FileManager fm = new FileManager(path);				
+		// ほかのプロセスがファイルを操作中のときは、読み込めるようになるまで待つ
+		FileManager fm = null;		
+		while(true) {
+			fm = new FileManager(path);
+			
+			if(fm.file_status) {
+				break;
+			}
+			
+			try {
+				Thread.sleep(3000);
+			} catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		status = fm.readLineFromFile();
 		
 		if(args[0].equals("START")) {			
@@ -88,6 +102,7 @@ class ConfirmThread extends Thread {
 		fmm.clearFile();
 		fmm.setFileData("true");
 		fmm.setFileData(this.address_range);
+		fmm.createLockFile();
 		for(String address: ipt) {			
 			if(ipcc_copy.Test(address)) {
 				// 接続可能
@@ -99,6 +114,7 @@ class ConfirmThread extends Thread {
 			
 			fmm.setFileData(write);
 		}
+		fmm.deleteLockFile();
 		
 		fmm.flush();
 	}
