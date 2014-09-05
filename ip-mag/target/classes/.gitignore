@@ -1,14 +1,1 @@
-/app-cubby.dicon
-/app.dicon
-/convention.dicon
-/creator.dicon
-/customizer.dicon
-/dbsession.dicon
-/env.txt
-/env_ut.txt
-/jdbc.dicon
-/messages.properties
-/messages_ja.properties
 /org/
-/s2container.dicon
-/s2jdbc.dicon

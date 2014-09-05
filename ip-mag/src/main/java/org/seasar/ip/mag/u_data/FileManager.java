@@ -29,8 +29,10 @@ public class FileManager {
 				file_str_array.add(line);
 			}
 			br.close();
-		} catch(FileNotFoundException e) {			
-		} catch(IOException e) {			
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -63,7 +65,8 @@ public class FileManager {
 		
 		try {
 			this.main_file.createNewFile();
-		} catch(IOException e) {			
+		} catch(IOException e) {		
+			e.printStackTrace();
 		}
 	}
 	
@@ -82,8 +85,10 @@ public class FileManager {
 				pw.println(als.get(i));
 			}
 			pw.close();
-		} catch(FileNotFoundException e) {			
-		} catch(IOException e) {			
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
 	}
 	/* ............................... */
@@ -111,7 +116,9 @@ public class FileManager {
 			pw.println(str);
 			pw.close();
 		} catch(FileNotFoundException e) {	
-		} catch(IOException e) {			
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
 		
 		this.file_str_array.add(str);
@@ -134,8 +141,10 @@ public class FileManager {
 				pw.println(als.get(i));
 			}
 			pw.close();
-		} catch(FileNotFoundException e) {			
-		} catch(IOException e) {			
+		} catch(FileNotFoundException e) {		
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import connection.FileManager;
 import connection.IPConnectionConfirm;
 import connection.IPConnectionConfirm.IPIterator;
+import javax.swing.JOptionPane;
 
 public class ConfirmConnection {
 	
@@ -33,6 +34,7 @@ public class ConfirmConnection {
 			}
 		} else {
 			// エラー
+			JOptionPane.showMessageDialog(null, "指定されたコマンドが正しくありません。");
 		}
 	}
 }

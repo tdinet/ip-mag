@@ -23,7 +23,7 @@ public class IpAction extends Action {
     public @RequestParameter String machine;
     public @RequestParameter String position;
     public @RequestParameter String etc;
-    public @RequestParameter String ipaddr;
+    public @RequestParameter String ipaddr = null;
 
 	public String ip = "";
 	public HttpServletRequest request;
@@ -32,13 +32,18 @@ public class IpAction extends Action {
 
 	// 登録画面へ遷移
 	public ActionResult index() {
-		sessionScope.put("NOWIP", ipaddr);
-		this.ip = ipaddr; 
+		if(ipaddr != null) {
+			sessionScope.put("NOWIP", ipaddr);
+			this.ip = ipaddr; 
+		} else {
+			this.ip = (String)sessionScope.get("NOWIP");
+		}
+		
         return new Forward("register.jsp");
 	}
 	
 	// 確認画面へ遷移
-	@Validation(rules = "validationRules", errorPage = "register.jsp")
+	@Validation(rules = "validationRules", errorPage = ("/ip/"))
 	public ActionResult register() {		
 		String ipdata = "";
 		ipdata = (String)sessionScope.get("NOWIP");
@@ -89,14 +94,14 @@ public class IpAction extends Action {
 	
 	// 入力内容に対するヴァリデーション
 	public ValidationRules validationRules = new DefaultValidationRules() {
-	@Override
-	// 入力項目は1文字以上入力
-	public void initialize() {
-		add("name", new RequiredValidator());
-		add("machine", new RequiredValidator());
-		add("position", new RequiredValidator());
-		add("etc", new RequiredValidator());
-		}
+		@Override
+	// 	入力項目は1文字以上入力で半角スペースを含まない
+		public void initialize() {
+			add("name", new RequiredValidator(), new RegexpValidator("[^ ]*"));
+			add("machine", new RequiredValidator(), new RegexpValidator("[^ ]*"));
+			add("position", new RequiredValidator(), new RegexpValidator("[^ ]*"));
+			add("etc", new RequiredValidator(), new RegexpValidator("[^ ]*"));
+		}		
 	};
 }
 

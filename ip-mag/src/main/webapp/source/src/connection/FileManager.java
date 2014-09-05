@@ -93,7 +93,15 @@ public class FileManager {
 	}
 	
 	// 1行読み込む
-	public String readLineFromFile() {		
+	public String readLineFromFile() {
+		if(this.file_str_array.isEmpty()) {
+			return null;
+		}
+		
+		if(this.file_index == this.file_str_array.size()) {
+			return null;
+		}
+		
 		return this.file_str_array.get(this.file_index++);
 	}
 	
