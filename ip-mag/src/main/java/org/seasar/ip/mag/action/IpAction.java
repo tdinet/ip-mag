@@ -83,7 +83,6 @@ public class IpAction extends Action {
 	
 	// 登録画面に戻る
 	public ActionResult back() {
-		this.err = "";
 		return new Forward("");
 	}
 	
@@ -93,15 +92,15 @@ public class IpAction extends Action {
 	}
 	
 	// 入力内容に対するヴァリデーション
-	public ValidationRules validationRules = new DefaultValidationRules() {
+	public ValidationRules validationRules = new DefaultValidationRules() {				
 		@Override
-	// 	入力項目は1文字以上入力で半角スペースを含まない
+		// 入力項目は1文字以上入力で半角スペースを含まない
 		public void initialize() {
 			add("name", new RequiredValidator(), new RegexpValidator("[^ ]*"));
 			add("machine", new RequiredValidator(), new RegexpValidator("[^ ]*"));
 			add("position", new RequiredValidator(), new RegexpValidator("[^ ]*"));
 			add("etc", new RequiredValidator(), new RegexpValidator("[^ ]*"));
-		}		
+		}
 	};
 }
 
